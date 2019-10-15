@@ -58,7 +58,11 @@ module.exports = {
         }),
         new CopyWebpackPlugin([
                 { from: 'public/*.+(ico|png|svg|webmanifest)', to: '', flatten: true },
-                { from: 'node_modules/yosys2digitaljs/tests/*.sv', to: 'examples', flatten: true }
+                { from: 'node_modules/yosys2digitaljs/tests/*.sv', to: 'examples', flatten: true },
+                { from: 'src/client/examples_mips/*.sv', to: 'examples', flatten: true },
+                { from: 'src/client/examples_mips/*.json', to: 'examples', flatten: true }
+
+
         ])
     ]
 };

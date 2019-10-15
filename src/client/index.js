@@ -13,18 +13,18 @@ import Split from 'split-grid';
 import { saveAs } from 'file-saver';
 
 const examples = [
-    ['sr_gate.sv', 'SR latch'],
-    ['sr_neg_gate.sv', 'SR latch (negated inputs)'],
-    ['dlatch_gate.sv', 'D latch'],
-    ['dff_masterslave.sv', 'D flip-flop (master-slave)'],
-    ['fulladder.sv', 'Full adder'],
-    ['serialadder.sv', 'Serial adder'],
-    ['cycleadder_arst.sv', 'Accumulating adder'],
-    ['prio_encoder.sv', 'Priority encoder'],
-    ['lfsr.sv', 'Linear-feedback shift register'],
-    ['fsm.sv', 'Finite state machine'],
-    ['rom.sv', 'ROM'],
-    ['ram.sv', 'RAM'],
+    ['single-mips', 'Single MIPS'],
+   //['sr_neg_gate.sv', 'SR latch (negated inputs)'],
+   //['dlatch_gate.sv', 'D latch'],
+   //['dff_masterslave.sv', 'D flip-flop (master-slave)'],
+    //['fulladder.sv', 'Full adder'],
+    //['serialadder.sv', 'Serial adder'],
+    //['cycleadder_arst.sv', 'Accumulating adder'],
+   //['prio_encoder.sv', 'Priority encoder'],
+    //['lfsr.sv', 'Linear-feedback shift register'],
+   //['fsm.sv', 'Finite state machine'],
+   //['rom.sv', 'ROM'],
+   //['ram.sv', 'RAM'],
 ];
 
 $(window).on('load', () => {
@@ -52,8 +52,11 @@ const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 for (const [file, name] of examples) {
     $('<a class="dropdown-item" href="">').text(name).appendTo($('#excodes')).click((e) => {
         e.preventDefault();
-        $.get('/examples/' + file, (data, status) => {
+        $.get('/examples/' + file + '.sv', (data, status) => {
             editor.setValue(data);
+        });
+        $.get('/examples/' + file + '.json', (data, status) => {
+            mkcircuit(data);
         });
     });
 }
@@ -198,15 +201,16 @@ $('button[type=submit]').click(e => {
     e.preventDefault();
     $('form').find('input, textarea, button, select').prop('disabled', true);
     filedata = {};
-    filenum = document.getElementById('files').files.length;
-    for (const file of document.getElementById('files').files) {
+    //filenum = document.getElementById('files').files.length;
+    /*for (const file of document.getElementById('files').files) {
         const reader = filedata[file.name] = new FileReader();
         reader.onload = x => {
             if (--filenum == 0) runquery();
         };
         reader.readAsText(file);
-    }
-    if (filenum == 0) runquery();
+    }*/
+    //if (filenum == 0) 
+        runquery();
 });
 
 $('button[name=pause]').click(e => {
