@@ -66,6 +66,7 @@ let loading = false, circuit, paper, monitor, monitorview, monitormem, filedata,
 function updatebuttons() {
     if (circuit == undefined) {
         $('#toolbar').find('button').prop('disabled', true);
+        $('#toolbar').find('button[name=synthesize]').prop('disabled', false);
         if (!loading) $('#toolbar').find('button[name=load]').prop('disabled', false);
         return;
     }
@@ -197,7 +198,7 @@ function runquery() {
     });
 }
 
-$('button[type=submit]').click(e => {
+$('button[name=synthesize]').click(e => {
     e.preventDefault();
     $('form').find('input, textarea, button, select').prop('disabled', true);
     filedata = {};

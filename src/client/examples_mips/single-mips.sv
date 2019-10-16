@@ -368,18 +368,7 @@ module memory (
 );
 
   reg [31:0] memory [0:127]; 
-  //wire [31:0] memory_temp = memory[addr];
-	
-  /*
-  always @(posedge clk) begin
-    if (memread) begin 
-      readdata <= memory[addr];
-    end
-		if (memwrite) begin
-      memory[addr] <= writedata;
-    end
-	end
-  */
+
   assign readdata = (memread) ? memory[addr] : 0;
 
   always @(posedge clk) begin

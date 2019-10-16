@@ -27,6 +27,7 @@
 <button name="fastfw" type="button" class="btn btn-secondary" title="Fast-forward simulation" disabled="true">⏩</button>
 <button name="single" type="button" class="btn btn-secondary" title="Run single time step" disabled="true">→</button>
 <button name="next" type="button" class="btn btn-secondary" title="Run until next event" disabled="true">⇥</button>
+
 </div>
 <div class="input-group mr-2">
 <div class="input-group-prepend">
@@ -38,6 +39,7 @@
 <button name="load" type="button" class="btn btn-secondary" title="Load from file" disabled="true">📁</button>
 <button name="save" type="button" class="btn btn-secondary" title="Save to file" disabled="true">💾</button>
 <button name="link" type="button" class="btn btn-secondary" title="Get link" disabled="true">🔗</button>
+<button name="synthesize" type="button" class="btn btn-primary">Sintetizar e simular!</button>
 </div>
 </div>
 </div>
@@ -47,7 +49,7 @@
 <div class="form-group">
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="excode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    MIPS Exampĺes
+    MIPS Examples
   </button>
   <div class="dropdown-menu" aria-labelledby="excode" id="excodes">
   </div>
@@ -55,13 +57,10 @@
 </div>
 <div class="form-group">
 <textarea id="code">
-// Write your modules here!
-module circuit();
+// Escreva seu módulo aqui
+module circuito();
 endmodule
 </textarea>
-</div>
-<div class="form-group">
-<button type="submit" class="btn btn-primary">Sintetizar e simular!</button>
 </div>
 <!-- <div class="form-group">
 <label for="files">Additional SystemVerilog files:</label>
