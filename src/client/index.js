@@ -11,6 +11,7 @@ import $ from 'jquery';
 import * as digitaljs from 'digitaljs';
 import Split from 'split-grid';
 import { saveAs } from 'file-saver';
+import autocomplete from 'autocompleter';
 
 const examples = [
     ['single-mips', 'Single MIPS'],
@@ -49,6 +50,14 @@ const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     }
 });
 
+const countries = [
+    { label: 'Canada', value: 'CA', group: 'North America' },
+    { label: 'United States', value: 'US', group: 'North America' },
+    { label: 'Uzbekistan', value: 'UZ', group: 'Asia' },
+];
+
+
+
 for (const [file, name] of examples) {
     $('<a class="dropdown-item" href="">').text(name).appendTo($('#excodes')).click((e) => {
         e.preventDefault();
@@ -56,6 +65,7 @@ for (const [file, name] of examples) {
             editor.setValue(data);
         });
         $.get('/examples/' + file + '.json', (data, status) => {
+            destroycircuit();
             mkcircuit(data);
         });
     });
@@ -108,14 +118,84 @@ function destroycircuit() {
     $('#monitorbox button').prop('disabled', true).off();
 }
 
+var wires_memoria = [];
+
+function preencheLista(fios){
+    wires_memoria = wires_memoria.concat(fios.map(wire => {
+        if (!wire.has('netname')) return;
+        const hier = [];
+        for (let sc = wire.graph.get('subcircuit'); sc != null; sc = sc.graph.get('subcircuit')) {
+            if (!sc.has('label')) return;
+            hier.push(sc.get('label'));
+        }
+        return {
+            name: wire.get('netname'),
+            path: hier.reverse(),
+            bits: wire.get('bits')
+        };
+    }).filter(x => x !== undefined));
+}
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
+function processWires(c){
+    let circuitos = []
+    let fios = []
+    if(!isEmpty(c.subcircuits)){
+        circuitos = Object.keys(c.subcircuits)
+        for(const ct of circuitos) processWires(c.subcircuits[ct])
+    }
+    if(!isEmpty(c.wires)){
+        fios = Object.keys(c.wires)
+        let all_fios = [];
+        for (const f of fios) all_fios.push(c.wires[f]);
+        preencheLista(all_fios);
+    } 
+}
+
 function mkcircuit(data) {
     loading = false;
     $('form').find('input, textarea, button, select').prop('disabled', false);
     circuit = new digitaljs.Circuit(data);
+    processWires(circuit.makeLabelIndex());
+
+    let wires_complete = [];
+    wires_memoria.map(x => {
+        wires_complete.push({
+            label: x.name,
+            group: x.path.join('.'),
+            value: x
+        })
+    });
+
+    autocomplete({
+        minLength: 1,
+        emptyMsg: "No wires found",
+        input: document.getElementById("wires-complete"),
+        fetch: function(text, update) {
+            text = text.toLowerCase();
+            var suggestions = wires_complete.filter(n => n.label.toLowerCase().startsWith(text))
+            update(suggestions);
+        },
+        onSelect: function(item) {
+            let itemWire = [];
+            itemWire.push(item.value);
+            monitor.loadWiresDesc(itemWire);
+        }
+    });
+
     circuit.on('postUpdateGates', (tick) => {
         $('#tick').val(tick);
     });
+
     circuit.start();
+
     monitor = new digitaljs.Monitor(circuit);
     if (monitormem) {
         monitor.loadWiresDesc(monitormem);
@@ -183,6 +263,7 @@ function runquery() {
         dataType: 'json',
         success: (responseData, status, xhr) => {
             mkcircuit(responseData.output);
+
         },
         error: (request, status, error) => {
             loading = false;
