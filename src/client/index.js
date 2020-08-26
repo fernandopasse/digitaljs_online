@@ -15,7 +15,7 @@ import autocomplete from 'autocompleter';
 
 const examples = [
     ['single-mips', 'Single MIPS'],
-   //['sr_neg_gate.sv', 'SR latch (negated inputs)'],
+    ['riscv-single', 'Single RISC V'],
    //['dlatch_gate.sv', 'D latch'],
    //['dff_masterslave.sv', 'D flip-flop (master-slave)'],
     //['fulladder.sv', 'Full adder'],
@@ -49,14 +49,6 @@ const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         name: 'verilog'
     }
 });
-
-const countries = [
-    { label: 'Canada', value: 'CA', group: 'North America' },
-    { label: 'United States', value: 'US', group: 'North America' },
-    { label: 'Uzbekistan', value: 'UZ', group: 'Asia' },
-];
-
-
 
 for (const [file, name] of examples) {
     $('<a class="dropdown-item" href="">').text(name).appendTo($('#excodes')).click((e) => {
